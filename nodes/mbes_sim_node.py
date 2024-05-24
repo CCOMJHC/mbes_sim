@@ -9,15 +9,8 @@ from project11_msgs.msg import NavEulerStamped
 from sensor_msgs.msg import PointCloud
 from geometry_msgs.msg import Point32
 import math
-from project11 import geodesic
+import project11
 
-last_depth_time = None
-
-heading = None
-
-# beam angle of 120 degrees
-tan_half_swath_angle = math.tan(math.radians(120/2.0))
-beam_count = 20
 
 class BathyGrid:
     def __init__(self, fname):
@@ -55,6 +48,22 @@ class BathyGrid:
             return self.data[int(yi),int(xi)]
         except IndexError:
             return None
+
+
+class SonarSim:
+    def __init__(self, bathy: BathyGrid):
+        self.bathy = bathy
+        self.robot = project11.nav.RobotNavigation()
+
+
+last_depth_time = None
+
+heading = None
+
+# beam angle of 120 degrees
+tan_half_swath_angle = math.tan(math.radians(120/2.0))
+beam_count = 20
+
 
 def heading_callback(data):
     global heading
