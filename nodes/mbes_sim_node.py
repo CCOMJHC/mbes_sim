@@ -63,12 +63,14 @@ class SonarSim:
         self.frame_id = rospy.get_param('~sonar_frame_id', 'mbes')
 
         self.depth_publisher = rospy.Publisher('depth', Float32, queue_size = 5)
-        self.ping_publisher = rospy.Publisher('mbes_ping', PointCloud2, queue_size=10)
+        self.ping_publisher = rospy.Publisher('soundings', PointCloud2, queue_size=10)
 
         self.ping_timer =  rospy.Timer(rospy.Duration(self.ping_rate), self.ping_callback)
 
     def ping_callback(self, event: TimerEvent):
         position = self.robot.positionLatLon()
+        if position is None:
+            return
         lon_rad =position[1]
         lat_rad = position[0]
         lon_deg = math.degrees(lon_rad)
